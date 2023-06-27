@@ -17,22 +17,19 @@ public class IOC {
     // 常量定义
     private static final String LOOPBACK_ERROR = "不允许回环依赖注入: ";
     private static final String NULL_RESULT = " 实例化结果为 null";
-    private static final String BEAN_PROVIDER_SHADOWED = """
-            在注册 BeanProvider 时出现冲突，数据已被以下信息覆盖：
-            Bean 类型：%type%
-            Bean 提供者方法：%provider%
-            Bean 配置类：%config%
-            """;
-    private static final String BEAN_NO_CONSTRUCTOR = """
-            未能找到无参构造方法，相关类：
-            PackageName：%package_name%
-            Name：%class_name%
-            """;
-    private static final String BEAN_CONSTRUCTOR_SECURITY = """
-            无权访问无参构造方法，相关类：
-            PackageName：%package_name%
-            Name：%class_name%
-            """;
+    private static final String BEAN_PROVIDER_SHADOWED =
+            "在注册 BeanProvider 时出现冲突，数据已被以下信息覆盖：\n"
+            +"Bean 类型：%type%\n"
+            +"Bean 提供者方法：%provider%\n"
+            +"Bean 配置类：%config%";
+    private static final String BEAN_NO_CONSTRUCTOR =
+            "未能找到无参构造方法，相关类：\n"
+            +"PackageName：%package_name%\n"
+            +"Name：%class_name%";
+    private static final String BEAN_CONSTRUCTOR_SECURITY =
+            "无权访问无参构造方法，相关类：\n"
+            +"PackageName：%package_name%\n"
+            +"Name：%class_name%";
     private static final Map<Class<?>, Supplier<Object>> beanProviders = new ConcurrentHashMap<>();
     // 添加私有constructor防止实例化工具类
     private IOC() {
