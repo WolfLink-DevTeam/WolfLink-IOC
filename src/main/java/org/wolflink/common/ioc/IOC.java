@@ -36,6 +36,9 @@ public class IOC {
         throw new IllegalStateException("Utility class");
     }
 
+    public static void registerBeanConfig(Class<?> beanConfigClass) {
+        registerBeanConfig(getBean(beanConfigClass));
+    }
     /**
      * 传入 Bean 配置类，通过反射扫描获取其中的 BeanProvider 注解获取提供者方法
      * 将方法封装到 Supplier
