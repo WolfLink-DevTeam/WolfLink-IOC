@@ -1,5 +1,5 @@
 # WolfLink - IOC
-
+[![](https://jitpack.io/v/WolfLink-DevTeam/WolfLink-IOC.svg)](https://jitpack.io/#WolfLink-DevTeam/WolfLink-IOC)
 ## 介绍
 
 本项目是一个轻量级并且线程安全的 Java IOC（控制反转）容器，整个项目只包括一个 `IOC` 类以及三个注解：`BeanProvider`，`Inject`，`Singleton`。
@@ -9,6 +9,23 @@ IOC 容器是一些大型框架的核心部分(如 Spring,Solon...)，但对于�
 - `BeanProvider`：此注解用于标记在配置类中提供 bean 的方法。该方法的返回类型就是提供的 bean 的类型，方法不接受参数，方法名随意。
 - `Inject`：此注解用于标记需要注入的字段，在通过 IOC 容器获取该字段所属类的实例时将自动为这些字段绑定到相应单例或创建新的实例。
 - `Singleton`：此注解用于标记单例类。对于标记为 `Singleton` 的类，IOC 容器将只创建一个实例。
+
+## 引入依赖
+
+Maven
+```maven
+<repositories>
+	<repository>
+	    <id>jitpack.io</id>
+		<url>https://jitpack.io</url>
+	</repository>
+</repositories>
+<dependency>
+	<groupId>com.github.WolfLink-DevTeam</groupId>
+	<artifactId>WolfLink-IOC</artifactId>
+	<version>建议填写当前最新版本</version>
+</dependency>
+```
 
 ## 快速使用
 
