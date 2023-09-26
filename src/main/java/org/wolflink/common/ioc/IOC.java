@@ -1,6 +1,8 @@
 package org.wolflink.common.ioc;
 
 import lombok.NonNull;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,26 +49,45 @@ public class IOC {
      */
     public static void registerBeanConfig(Object beanConfig) {
         Class<?> beanConfigClass = beanConfig.getClass();
-        Arrays.stream(beanConfigClass.getDeclaredMethods()).forEach(method -> {
+        // 扫描当前实例类的方法和注解
+        scanAndRegisterBeanProvider(beanConfig,beanConfigClass);
+        // 扫描实例的父类和接口的方法和注解
+        Class<?> superClass = beanConfigClass.getSuperclass();
+        if(!(superClass.isAssignableFrom(Object.class))) {
+            scanAndRegisterBeanProvider(beanConfig,superClass);
+        }
+        Class<?>[] interfaceClasses = beanConfigClass.getInterfaces();
+        for (Class<?> interfaceClass : interfaceClasses) {
+            scanAndRegisterBeanProvider(beanConfig,interfaceClass);
+        }
+
+    }
+
+    /**
+     * 扫描指定类中的方法，将符合条件的 BeanProvider 注册到容器中
+     */
+    private static void scanAndRegisterBeanProvider(Object object,Class<?> clazz) {
+        Arrays.stream(clazz.getDeclaredMethods()).forEach(method -> {
             if(Arrays.stream(method.getAnnotations()).anyMatch(it -> it.annotationType().equals(BeanProvider.class))) {
                 Class<?> returnType = method.getReturnType();
                 if(beanProviders.containsKey(returnType)) {
                     System.out.println(BEAN_PROVIDER_SHADOWED
                             .replace("%type%",returnType.getName())
                             .replace("%provider%",method.getName())
-                            .replace("%config%",beanConfigClass.getName())
+                            .replace("%config%",object.getClass().getName())
                     );
                 }
-                beanProviders.put(returnType,()->{
-                    try {
-                        return method.invoke(beanConfig);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                });
+                beanProviders.put(returnType,()-> registerBeanConfig(object,method));
             }
         });
+    }
+    private static Object registerBeanConfig(Object object,Method providerMethod) {
+        try {
+            return providerMethod.invoke(object);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
