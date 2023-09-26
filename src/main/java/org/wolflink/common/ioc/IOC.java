@@ -48,7 +48,7 @@ public class IOC {
     public static void registerBeanConfig(Object beanConfig) {
         Class<?> beanConfigClass = beanConfig.getClass();
         Arrays.stream(beanConfigClass.getDeclaredMethods()).forEach(method -> {
-            if(Arrays.stream(method.getDeclaredAnnotations()).anyMatch(it -> it.annotationType().equals(BeanProvider.class))) {
+            if(Arrays.stream(method.getAnnotations()).anyMatch(it -> it.annotationType().equals(BeanProvider.class))) {
                 Class<?> returnType = method.getReturnType();
                 if(beanProviders.containsKey(returnType)) {
                     System.out.println(BEAN_PROVIDER_SHADOWED
